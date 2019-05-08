@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Popular Movies Stage 2</string>
+
+    <!-- Recyclerview -->
+    <string name="poster_image">Poster Image</string>
+
+    <!-- Movie Detail -->
+    <string name="movie_poster">movie_poster</string>
+    <string name="release_date">Release Date:</string>
+    <string name="rating">Rating</string>
+
+    <!-- Menu Items -->
+    <string name="sort_by">Sort By:</string>
+    <string name="most_popular">Most Popular</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="favorites">Favorites</string>
+
+    <!-- Error -->
+    <string name="no_connection_icon">No Connection Icon</string>
+    <string name="no_server_icon">No Server Icon</string>
+    <string name="network_error">Cannot connect to Internet. Please check your connection.</string>
+    <string name="server_error">The server could not be found. Please try again.</string>
+    <string name="parse_error">Parsing error. Please try again after some time.</string>
+    <string name="no_connection">Cannot connect to Internet. Please check your connection.</string>
+    <string name="retry">Retry</string>
+</resources>
