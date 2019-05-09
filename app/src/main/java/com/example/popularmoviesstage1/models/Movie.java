@@ -7,6 +7,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class Movie implements Parcelable {
 
+    @SerializedName("id")
+    private String mId;
     @SerializedName("title")
     private String mTitle;
     @SerializedName("overview")
@@ -24,6 +26,7 @@ public class Movie implements Parcelable {
     private String BASE_URL_POSTER = "https://image.tmdb.org/t/p/w300";
 
     protected Movie(Parcel in) {
+        mId = in.readString();
         mTitle = in.readString();
         mOverview = in.readString();
         mReleaseDate = in.readString();
@@ -45,6 +48,8 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
+
+    public String getmId() { return mId; }
 
     public String getmTitle() {
         return mTitle;
@@ -80,6 +85,8 @@ public class Movie implements Parcelable {
         return releaseYear;
     }
 
+    public void setmId(String mId) { this.mId = mId; }
+
     public void setmTitle(String mTitle) {
         this.mTitle = mTitle;
     }
@@ -111,6 +118,7 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(mId);
         parcel.writeString(mTitle);
         parcel.writeString(mOverview);
         parcel.writeString(mReleaseDate);
