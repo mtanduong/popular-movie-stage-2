@@ -1,6 +1,8 @@
 package com.example.popularmoviesstage1.utils;
 
 import com.example.popularmoviesstage1.models.MovieDBObject;
+import com.example.popularmoviesstage1.models.ReviewDBObject;
+import com.example.popularmoviesstage1.models.VideoDBObject;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -19,9 +21,9 @@ public interface MovieService {
     Call<MovieDBObject> getTopRatedMovies(@Query(API_PARAM) String api_key);
 
     @GET(MovieApiUtils.VIDEO_PATH)
-    Call<MovieDBObject> getVideoMovies(@Path("id") String movie_id, @Query(API_PARAM) String api_key);
+    Call<VideoDBObject> getVideoMovies(@Path("id") String movie_id, @Query(API_PARAM) String api_key);
 
     @GET(MovieApiUtils.REVIEW_PATH)
-    Call<MovieDBObject> getReviewMovies(@Path("id") String movie_id, @Query(API_PARAM) String api_key);
+    Call<ReviewDBObject> getReviewMovies(@Path("id") String movie_id, @Query(API_PARAM) String api_key);
 
 }

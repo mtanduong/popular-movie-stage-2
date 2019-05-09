@@ -9,12 +9,19 @@ import android.widget.TextView;
 
 import com.example.popularmoviesstage1.R;
 import com.example.popularmoviesstage1.models.Movie;
+import com.example.popularmoviesstage1.models.ReviewDBObject;
+import com.example.popularmoviesstage1.models.VideoDBObject;
+import com.example.popularmoviesstage1.utils.MovieApiUtils;
+import com.example.popularmoviesstage1.utils.MovieService;
 import com.squareup.picasso.Picasso;
+
+import retrofit2.Call;
 
 
 public class DetailActivity extends AppCompatActivity {
 
     private static final String TAG = "DetailActivity";
+    private MovieService retrofitService = MovieApiUtils.createService();
     private String mTitle;
 
     @Override
@@ -32,12 +39,17 @@ public class DetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Movie movie = intent.getParcelableExtra("Movie Detail");
 
+        String id = movie.getmId();
         String title = movie.getmTitle();
         String releaseYear = movie.getmYear();
         String overview = movie.getmOverview();
         String releaseDate = movie.getmReleaseDate();
         String userReview = movie.getmUserRating();
         String posterUrl = movie.getmPosterUrl();
+
+        Call<VideoDBObject> callVideos = retrofitService.getVideoMovies(id, MovieApiUtils.API_KEY);
+        Call<ReviewDBObject> callReviews = retrofitService.getReviewMovies(id, MovieApiUtils.API_KEY);
+        Log.d(TAG, "Post video/review call");
 
         setDetail(title, releaseYear, overview, releaseDate, userReview, posterUrl);
         Log.d(TAG, "getIncomingIntent: Intents completed");
@@ -67,5 +79,13 @@ public class DetailActivity extends AppCompatActivity {
                 .load(posterUrl)
                 .resize(1000, 1500)
                 .into(image);
+    }
+
+    private void callVideoApi(Call<VideoDBObject> call) {
+
+    }
+
+    private void callReviewApi(Call<ReviewDBObject> call) {
+
     }
 }
