@@ -65,6 +65,14 @@ public class Video implements Parcelable {
         return mType;
     }
 
+    public String getLink() {
+        if (this.mSite.equals("YouTube")) {
+            return "https://www.youtube.com/watch?v=" + mKey;
+        }else {
+            return "";
+        }
+    }
+
     public void setmId(String mId) {
         this.mId = mId;
     }
