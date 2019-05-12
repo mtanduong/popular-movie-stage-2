@@ -3,11 +3,19 @@ package com.example.popularmoviesstage1.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.popularmoviesstage1.R;
+import com.example.popularmoviesstage1.adapters.TrailerRecyclerViewAdapter;
 import com.example.popularmoviesstage1.models.Movie;
 import com.example.popularmoviesstage1.models.ReviewDBObject;
 import com.example.popularmoviesstage1.models.Video;
@@ -29,6 +37,8 @@ public class DetailActivity extends AppCompatActivity {
     private MovieService retrofitService = MovieApiUtils.createService();
     private String mTitle;
     private List<Video> trailer;
+    private String trailerUrl;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,9 +131,22 @@ public class DetailActivity extends AppCompatActivity {
         Log.d(TAG, "videosite: " + trailer.get(0).getmSite());
         Log.d(TAG, "videokey: " + trailer.get(0).getmKey());
         Log.d(TAG, "video link: " + trailer.get(0).getLink());
+
+        trailerUrl = trailer.get(0).getmKey();
+
+        startRecyclerView(trailer);
     }
 
     private void callReviewApi(Call<ReviewDBObject> call) {
 
+    }
+
+    private void startRecyclerView(List<Video> trailerList) {
+
+        recyclerView = findViewById(R.id.trailer_recycler_view);
+        TrailerRecyclerViewAdapter trailerAdapter = new TrailerRecyclerViewAdapter(this, trailerList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        recyclerView.setAdapter(trailerAdapter);
     }
 }
