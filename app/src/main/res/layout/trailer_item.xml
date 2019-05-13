@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/trailer_parent_layout"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="#221F1F">
 
     <TextView
         android:id="@+id/trailer_textView"
-        android:layout_width="361dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
+        android:layout_marginStart="10dp"
         android:layout_toEndOf="@+id/trailer_imageView"
         android:layout_centerVertical="true"
-        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod"/>
+        android:textColor="#FFF"
+        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod"
+        />
 
 
     <ImageView
         android:id="@+id/trailer_imageView"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        />
+        android:src="@drawable/ic_youtube_icon"
+        tools:src="@drawable/ic_youtube_icon"/>
 </RelativeLayout>
