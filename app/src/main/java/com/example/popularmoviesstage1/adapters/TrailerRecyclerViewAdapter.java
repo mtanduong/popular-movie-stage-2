@@ -56,6 +56,7 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
             public void onClick(View v) {
 
                 //Intent intent = new Intent(mContext, );
+                //To launch youtube app to specific trailer
 
                 String itemClicked = mTrailerData.get(position).getmName();
                 Toast.makeText(mContext, "You clicked: " + itemClicked, Toast.LENGTH_LONG).show();
@@ -65,10 +66,7 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
 
     @Override
     public int getItemCount() {
-        if (mTrailerData.size() > 10) {
-            return 10;
-        } else
-        return mTrailerData.size();
+        return (mTrailerData.size() > 10) ? 10 : mTrailerData.size();
     }
 
     public static class TrailerViewHolder extends RecyclerView.ViewHolder {

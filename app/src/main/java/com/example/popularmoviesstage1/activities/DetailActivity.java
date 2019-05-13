@@ -110,7 +110,11 @@ public class DetailActivity extends AppCompatActivity {
                     //Don't display any video on error
                     return;
                 }
-                parseVideos(response.body());
+
+                if (response.body().getResults().size() > 0) {
+                    parseVideos(response.body());
+                }
+
             }
 
             @Override
