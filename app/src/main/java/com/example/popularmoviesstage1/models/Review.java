@@ -40,9 +40,7 @@ public class Review implements Parcelable {
         }
     };
 
-    public String getAuthor() {
-        return author;
-    }
+    public String getAuthor() { return author; }
 
     public String getContent() {
         return content;

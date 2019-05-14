@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +19,12 @@ import java.util.List;
 
 public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecyclerViewAdapter.ReviewViewHolder> {
 
-    private static final String TAG = "ReviewRecyclerViewAdapter";
+    private static final String TAG = "ReviewAdapter";
     private Context mContext;
     private List<Review> mReviewData;
 
     public ReviewRecyclerViewAdapter(Context mContext, List<Review> mReviewData) {
-        this.mContext =mContext;
+        this.mContext = mContext;
         this.mReviewData = mReviewData;
     }
 
@@ -33,7 +34,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
 
         View view;
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        view = inflater.inflate(R.layout.trailer_item, parent, false);
+        view = inflater.inflate(R.layout.review_item, parent, false);
 
         return new ReviewViewHolder(view);
     }
@@ -63,8 +64,8 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
             super(itemView);
 
             mUser = itemView.findViewById(R.id.user_textView);
-            mReview =itemView.findViewById(R.id.review_textView);
-            parentLayout =itemView.findViewById(R.id.review_parent_layout);
+            mReview = itemView.findViewById(R.id.review_textView);
+            parentLayout = itemView.findViewById(R.id.review_parent_layout);
         }
     }
 }

@@ -15,8 +15,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.popularmoviesstage1.R;
+import com.example.popularmoviesstage1.adapters.ReviewRecyclerViewAdapter;
 import com.example.popularmoviesstage1.adapters.TrailerRecyclerViewAdapter;
 import com.example.popularmoviesstage1.models.Movie;
+import com.example.popularmoviesstage1.models.Review;
 import com.example.popularmoviesstage1.models.ReviewDBObject;
 import com.example.popularmoviesstage1.models.Video;
 import com.example.popularmoviesstage1.models.VideoDBObject;
@@ -38,7 +40,8 @@ public class DetailActivity extends AppCompatActivity {
     private String mTitle;
     private List<Video> trailer;
     private String trailerUrl;
-    private RecyclerView recyclerView;
+
+    private List<Review> review;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +71,7 @@ public class DetailActivity extends AppCompatActivity {
         Log.d(TAG, "Post video/review call");
 
         callVideoApi(callVideos);
-
+        callReviewApi(callReviews);
 
         setDetail(title, releaseYear, overview, releaseDate, userReview, posterUrl);
         Log.d(TAG, "getIncomingIntent: Intents completed");
@@ -138,19 +141,55 @@ public class DetailActivity extends AppCompatActivity {
 
         trailerUrl = trailer.get(0).getmKey();
 
-        startRecyclerView(trailer);
+        startVideoRecyclerView(trailer);
     }
 
     private void callReviewApi(Call<ReviewDBObject> call) {
+        Log.d(TAG, "called callReviewApi");
+        call.enqueue(new Callback<ReviewDBObject>() {
+            @Override
+            public void onResponse(Call<ReviewDBObject> call, retrofit2.Response<ReviewDBObject> response) {
+                if (!response.isSuccessful()) {
+                    Log.d(TAG, "callReviewApi server error: " + response.code());
+                    //Don't display any review on error
+                    return;
+                }
 
+                if (response.body().getResults().size() > 0) {
+                    parseReviews(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ReviewDBObject> call, Throwable t) {
+
+            }
+        });
     }
 
-    private void startRecyclerView(List<Video> trailerList) {
+    private void parseReviews(ReviewDBObject reviewObject) {
+        Log.d(TAG, "parseReviews stated");
 
+        review = reviewObject.getResults();
+
+        startReviewRecyclerView(review);
+    }
+
+    private void startVideoRecyclerView(List<Video> trailerList) {
+        RecyclerView recyclerView;
         recyclerView = findViewById(R.id.trailer_recycler_view);
         TrailerRecyclerViewAdapter trailerAdapter = new TrailerRecyclerViewAdapter(this, trailerList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         recyclerView.setAdapter(trailerAdapter);
+    }
+
+    private void startReviewRecyclerView(List<Review> reviewList) {
+        RecyclerView recyclerView;
+        recyclerView = findViewById(R.id.review_recycler_view);
+        ReviewRecyclerViewAdapter reviewAdapter =new ReviewRecyclerViewAdapter(this, reviewList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        recyclerView.setAdapter(reviewAdapter);
     }
 }
