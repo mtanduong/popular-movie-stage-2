@@ -1,11 +1,14 @@
 package com.example.popularmoviesstage1.adapters;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +24,7 @@ import java.util.List;
 
 public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecyclerViewAdapter.TrailerViewHolder>{
 
-    private static final String TAG = "TrailerRecyclerViewAdapter";
+    private static final String TAG = "TrailerAdapter";
     private Context mContext;
     private List<Video> mTrailerData;
 
@@ -46,7 +49,7 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
     @Override
     public void onBindViewHolder(@NonNull TrailerViewHolder holder, final int position) {
 
-        Video currentVideo = mTrailerData.get(position);
+        final Video currentVideo = mTrailerData.get(position);
 
         holder.thumbTxt.setText(currentVideo.getmName());
 
@@ -55,8 +58,7 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
             @Override
             public void onClick(View v) {
 
-                //Intent intent = new Intent(mContext, );
-                //To launch youtube app to specific trailer
+                watchYoutubeVideo(mContext, currentVideo.getmKey());
 
                 String itemClicked = mTrailerData.get(position).getmName();
                 Toast.makeText(mContext, "You clicked: " + itemClicked, Toast.LENGTH_LONG).show();
@@ -80,6 +82,21 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
             thumbImg = itemView.findViewById(R.id.trailer_imageView);
             thumbTxt = itemView.findViewById(R.id.trailer_textView);
             parentLayout = itemView.findViewById(R.id.trailer_parent_layout);
+        }
+    }
+
+    public static void watchYoutubeVideo(Context context, String id){
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
+        Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("http://www.youtube.com/watch?v=" + id));
+
+        Log.d(TAG, "watchYoutubeVideo: vnd.youtube:" + id);
+        Log.d(TAG, "watchYoutubeVideo: http://www.youtube.com/watch?v=" + id);
+
+        try {
+            context.startActivity(appIntent);
+        } catch (ActivityNotFoundException ex) {
+            context.startActivity(webIntent);
         }
     }
 }
