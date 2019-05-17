@@ -143,6 +143,17 @@
             android:contentDescription="@string/movie_poster"
             tools:src="@drawable/default_image"/>
 
+        <ImageView
+            android:id="@+id/favorite_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/movie_poster"
+            android:layout_alignTop="@id/movie_poster"
+            android:layout_alignRight="@id/movie_poster"
+            android:layout_marginTop="-28dp"
+            android:layout_marginRight="-28dp"
+            android:src="@drawable/ic_favorite_icon" />
+
         <TextView
             android:id="@+id/synopsis"
             android:layout_width="wrap_content"

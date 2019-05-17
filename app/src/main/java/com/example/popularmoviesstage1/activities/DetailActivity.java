@@ -6,13 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.popularmoviesstage1.R;
 import com.example.popularmoviesstage1.adapters.ReviewRecyclerViewAdapter;
@@ -30,7 +27,6 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class DetailActivity extends AppCompatActivity {
@@ -39,8 +35,7 @@ public class DetailActivity extends AppCompatActivity {
     private MovieService retrofitService = MovieApiUtils.createService();
     private String mTitle;
     private List<Video> trailer;
-    private String trailerUrl;
-
+    private ImageView favoriteButton;
     private List<Review> review;
 
     @Override
@@ -50,6 +45,17 @@ public class DetailActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: Started");
         getIncomingIntent();
         setTitle(mTitle);
+
+        favoriteButton = findViewById(R.id.favorite_button);
+
+        favoriteButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(DetailActivity.this, mTitle + " added to Favorites", Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     private void getIncomingIntent() {
@@ -97,6 +103,8 @@ public class DetailActivity extends AppCompatActivity {
 
         ImageView image = findViewById(R.id.movie_poster);
 
+
+
         Picasso.get()
                 .load(posterUrl)
                 .resize(1000, 1500)
@@ -138,8 +146,6 @@ public class DetailActivity extends AppCompatActivity {
         Log.d(TAG, "videosite: " + trailer.get(0).getmSite());
         Log.d(TAG, "videokey: " + trailer.get(0).getmKey());
         Log.d(TAG, "video link: " + trailer.get(0).getLink());
-
-        trailerUrl = trailer.get(0).getmKey();
 
         startVideoRecyclerView(trailer);
     }
