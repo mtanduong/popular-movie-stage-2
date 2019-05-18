@@ -64,13 +64,13 @@ public class DetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Movie movie = intent.getParcelableExtra("Movie Detail");
 
-        String id = movie.getmId();
-        String title = movie.getmTitle();
+        String id = movie.getId();
+        String title = movie.getTitle();
         String releaseYear = movie.getmYear();
-        String overview = movie.getmOverview();
-        String releaseDate = movie.getmReleaseDate();
-        String userReview = movie.getmUserRating();
-        String posterUrl = movie.getmPosterUrl();
+        String overview = movie.getOverview();
+        String releaseDate = movie.getReleaseDate();
+        String userReview = movie.getUserRating();
+        String posterUrl = movie.getPosterUrl();
 
         Call<VideoDBObject> callVideos = retrofitService.getVideoMovies(id, MovieApiUtils.API_KEY);
         Call<ReviewDBObject> callReviews = retrofitService.getReviewMovies(id, MovieApiUtils.API_KEY);

@@ -5,38 +5,63 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "favorites_table")
 public class Movie implements Parcelable {
 
+    @PrimaryKey
+    @NonNull
     @SerializedName("id")
-    private String mId;
+    private String id;
+
     @SerializedName("title")
-    private String mTitle;
+    private String title;
+
     @SerializedName("overview")
-    private String mOverview;
+    private String overview;
+
     @SerializedName("release_date")
-    private String mReleaseDate;
+    private String releaseDate;
+
     @SerializedName("vote_average")
-    private String mUserRating;
+    private String userRating;
+
     @SerializedName("poster_path")
-    private String mThumbnailImgUrl;
+    private String thumbnailImgUrl;
+
     //@SerializedName("baseImgUrl")
-    private String mPosterUrl = "";
+    //private String mPosterUrl = "";
 
-    private String BASE_URL_THUMB = "https://image.tmdb.org/t/p/w185";
-    private String BASE_URL_POSTER = "https://image.tmdb.org/t/p/w300";
+    //private String BASE_URL_THUMB = "https://image.tmdb.org/t/p/w185";
+    //private String BASE_URL_POSTER = "https://image.tmdb.org/t/p/w300";
 
+    public Movie(String id, String title, String overview, String releaseDate, String userRating, String thumbnailImgUrl) {
+        this.id = id;
+        this.title = title;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+        this.userRating = userRating;
+        this.thumbnailImgUrl = thumbnailImgUrl;
+    }
+
+    @Ignore
     protected Movie(Parcel in) {
-        mId = in.readString();
-        mTitle = in.readString();
-        mOverview = in.readString();
-        mReleaseDate = in.readString();
-        mUserRating = in.readString();
-        mThumbnailImgUrl = in.readString();
+        id = in.readString();
+        title = in.readString();
+        overview = in.readString();
+        releaseDate = in.readString();
+        userRating = in.readString();
+        thumbnailImgUrl = in.readString();
         //mPosterUrl = in.readString();
         //BASE_URL_THUMB = in.readString();
         //BASE_URL_POSTER = in.readString();
     }
 
+    @Ignore
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
         @Override
         public Movie createFromParcel(Parcel in) {
@@ -49,81 +74,99 @@ public class Movie implements Parcelable {
         }
     };
 
-    public String getmId() { return mId; }
-
-    public String getmTitle() {
-        return mTitle;
+    public String getId() {
+        return id;
     }
 
-    public String getmOverview() {
-        return mOverview;
+    public String getTitle() {
+
+        return title;
     }
 
-    public String getmReleaseDate() {
-        String baseDate = mReleaseDate;
+    public String getOverview() {
+
+        return overview;
+    }
+
+    public String getReleaseDate() {
+        String baseDate = releaseDate;
         String[] parts = baseDate.split("-");
-        String releaseDate = parts[1] + "/" + parts[2] + "/" + parts[0];
-        return releaseDate;
+        String mReleaseDate = parts[1] + "/" + parts[2] + "/" + parts[0];
+        return mReleaseDate;
     }
 
-    public String getmUserRating() {
-        return mUserRating;
+    public String getUserRating() {
+
+        return userRating;
     }
 
-    public String getmThumbnailImgUrl() {
-        return "https://image.tmdb.org/t/p/w185" + mThumbnailImgUrl;
+    public String getThumbnailImgUrl() {
+
+        return "https://image.tmdb.org/t/p/w185" + thumbnailImgUrl;
     }
 
-    public String getmPosterUrl() {
-        return "https://image.tmdb.org/t/p/w300" + mThumbnailImgUrl;
+    public String getPosterUrl() {
+
+        return "https://image.tmdb.org/t/p/w300" + thumbnailImgUrl;
     }
 
     public String getmYear() {
-        String baseDate = mReleaseDate;
+        String baseDate = releaseDate;
         String[] parts = baseDate.split("-");
         String releaseYear = parts[0];
         return releaseYear;
     }
 
-    public void setmId(String mId) { this.mId = mId; }
+    public void setId(String id) {
 
-    public void setmTitle(String mTitle) {
-        this.mTitle = mTitle;
+        this.id = id;
     }
 
-    public void setmOverview(String mOverview) {
-        this.mOverview = mOverview;
+    public void setTitle(String title) {
+
+        this.title = title;
+    }
+
+    public void setmOverview(String overview) {
+
+        this.overview = overview;
     }
 
     public void setmReleaseDate(String mReleaseDate) {
-        this.mReleaseDate = mReleaseDate;
+
+        this.releaseDate = mReleaseDate;
     }
 
     public void setmUserRating(String mUserRating) {
-        this.mUserRating = mUserRating;
+
+        this.userRating = mUserRating;
     }
 
     public void setmThumbnailImgUrl(String mThumbnailImgUrl) {
-        this.mThumbnailImgUrl = mThumbnailImgUrl;
+
+        this.thumbnailImgUrl = mThumbnailImgUrl;
     }
 
-    public void setmPosterUrl(String mPosterUrl) {
-        this.mPosterUrl = mPosterUrl;
-    }
+//    public void setmPosterUrl(String mPosterUrl) {
+//
+//        this.mPosterUrl = mPosterUrl;
+//    }
 
     @Override
     public int describeContents() {
+
         return 0;
     }
 
+    @Ignore
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(mId);
-        parcel.writeString(mTitle);
-        parcel.writeString(mOverview);
-        parcel.writeString(mReleaseDate);
-        parcel.writeString(mUserRating);
-        parcel.writeString(mThumbnailImgUrl);
+        parcel.writeString(id);
+        parcel.writeString(title);
+        parcel.writeString(overview);
+        parcel.writeString(releaseDate);
+        parcel.writeString(userRating);
+        parcel.writeString(thumbnailImgUrl);
         //parcel.writeString(mPosterUrl);
         //parcel.writeString(BASE_URL_THUMB);
         //parcel.writeString(BASE_URL_POSTER);

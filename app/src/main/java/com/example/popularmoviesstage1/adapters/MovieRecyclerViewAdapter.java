@@ -47,7 +47,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     public void onBindViewHolder(@NonNull MovieViewHolder holder, final int position) {
 
         Picasso.get()
-                .load(mMovieData.get(position).getmThumbnailImgUrl())
+                .load(mMovieData.get(position).getThumbnailImgUrl())
                 .resize(650, 1000)
                 .centerInside()
                 .into(holder.thumbImg);
@@ -60,7 +60,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
                 intent.putExtra("Movie Detail", mMovieData.get(position));
 
-                String itemClicked = mMovieData.get(position).getmTitle();
+                String itemClicked = mMovieData.get(position).getTitle();
                 Toast.makeText(mContext, "You clicked: " + itemClicked, Toast.LENGTH_SHORT).show();
 
                 mContext.startActivity(intent);

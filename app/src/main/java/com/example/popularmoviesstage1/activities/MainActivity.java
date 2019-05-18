@@ -185,12 +185,12 @@ public class MainActivity extends AppCompatActivity {
 
         movieList = movieObject.getMovieList();
 
-        Log.d(TAG, "moviename: " + movieList.get(0).getmTitle());
-        Log.d(TAG, "moviename: " + movieList.get(0).getmThumbnailImgUrl());
-        Log.d(TAG, "moviename: " + movieList.get(0).getmPosterUrl());
-        Log.d(TAG, "moviename: " + movieList.get(0).getmOverview());
-        Log.d(TAG, "moviename: " + movieList.get(0).getmReleaseDate());
-        Log.d(TAG, "moviename: " + movieList.get(0).getmUserRating());
+        Log.d(TAG, "moviename: " + movieList.get(0).getTitle());
+        Log.d(TAG, "moviename: " + movieList.get(0).getThumbnailImgUrl());
+        Log.d(TAG, "moviename: " + movieList.get(0).getPosterUrl());
+        Log.d(TAG, "moviename: " + movieList.get(0).getOverview());
+        Log.d(TAG, "moviename: " + movieList.get(0).getReleaseDate());
+        Log.d(TAG, "moviename: " + movieList.get(0).getUserRating());
 
         startRecyclerView(movieList);
         progressBar.setVisibility(View.GONE);
