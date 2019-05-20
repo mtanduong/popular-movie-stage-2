@@ -57,22 +57,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String SORT = "sort";
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Log.d(TAG, "onActivityResult: TRIGGERED ");
-        if (requestCode == ADD_FAVORITE_REQUEST && resultCode == RESULT_OK) {
-            Movie movie = data.getParcelableExtra(DetailActivity.EXTRA_FAVORITE);
-
-
-
-            Toast.makeText(this, movie.getTitle() + " saved to favorites", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Movie NOT saved to favorites", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -94,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 //        Movie movie = new Movie("297761", "testtitle", "testoverview", "2016-08-03", "5.91", "testurl");
-//        movieView = ViewModelProviders.of(this).get(MovieView.class);
+        movieView = ViewModelProviders.of(this).get(MovieView.class);
 //        movieView.insert(movie);
         //final MovieRecyclerViewAdapter adapter = new MovieRecyclerViewAdapter();
 
@@ -143,13 +127,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void startRecyclerView(List<Movie> movieList) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        Log.d(TAG, "onActivityResult: TRIGGERED ");
+        if (requestCode == ADD_FAVORITE_REQUEST && resultCode == RESULT_OK) {
+            Movie movie = data.getParcelableExtra(DetailActivity.EXTRA_FAVORITE);
 
-        MovieRecyclerViewAdapter movieAdapter = new MovieRecyclerViewAdapter(this, movieList);
-        recyclerView.setAdapter(movieAdapter);
+            movieView.insert(movie);
 
+            Log.d(TAG, "Successfully inserted into DB: " + movie.getTitle());
 
+            Toast.makeText(this, movie.getTitle() + " saved to favorites", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Movie NOT saved to favorites", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -196,6 +189,12 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startRecyclerView(List<Movie> movieList) {
+
+        MovieRecyclerViewAdapter movieAdapter = new MovieRecyclerViewAdapter(this, movieList);
+        recyclerView.setAdapter(movieAdapter);
     }
 
     private void callApi(Call<MovieDBObject> call) {
