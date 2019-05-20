@@ -15,6 +15,7 @@ import com.example.popularmoviesstage1.R;
 import com.example.popularmoviesstage1.adapters.ReviewRecyclerViewAdapter;
 import com.example.popularmoviesstage1.adapters.TrailerRecyclerViewAdapter;
 import com.example.popularmoviesstage1.models.Movie;
+import com.example.popularmoviesstage1.models.MovieView;
 import com.example.popularmoviesstage1.models.Review;
 import com.example.popularmoviesstage1.models.ReviewDBObject;
 import com.example.popularmoviesstage1.models.Video;
@@ -32,11 +33,14 @@ import retrofit2.Callback;
 public class DetailActivity extends AppCompatActivity {
 
     private static final String TAG = "DetailActivity";
+    public static final String EXTRA_FAVORITE = "EXTRA_FAVORITE";
     private MovieService retrofitService = MovieApiUtils.createService();
     private String mTitle;
     private List<Video> trailer;
     private ImageView favoriteButton;
     private List<Review> review;
+    private Movie movie;
+    private MovieView movieViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,22 @@ public class DetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(DetailActivity.this, mTitle + " added to Favorites", Toast.LENGTH_SHORT).show();
 
+//                Intent intent = new Intent(DetailActivity.this, MainActivity.class);
+//                movie = intent.getParcelableExtra("Movie Detail");
+//                intent.putExtra(EXTRA_FAVORITE, movie);
+//                setResult(RESULT_OK, intent);
+//                finish();
+
+                Intent intent = getIntent();
+                movie = intent.getParcelableExtra("Movie Detail");
+                Log.d(TAG, "onClick: INSERTING " + movie.getTitle());
+
+                intent.putExtra(EXTRA_FAVORITE, movie);
+
+                setResult(RESULT_OK, intent);
+                finish();
+                //movieViewModel.insert(movie);
+
             }
         });
     }
@@ -62,7 +82,7 @@ public class DetailActivity extends AppCompatActivity {
         Log.d(TAG, "getIncomingIntent: Checking for Intents");
 
         Intent intent = getIntent();
-        Movie movie = intent.getParcelableExtra("Movie Detail");
+        movie = intent.getParcelableExtra("Movie Detail");
 
         String id = movie.getId();
         String title = movie.getTitle();

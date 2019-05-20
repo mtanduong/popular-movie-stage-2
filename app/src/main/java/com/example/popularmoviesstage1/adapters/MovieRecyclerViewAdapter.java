@@ -1,10 +1,14 @@
 package com.example.popularmoviesstage1.adapters;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,19 +21,23 @@ import com.example.popularmoviesstage1.activities.DetailActivity;
 import com.example.popularmoviesstage1.models.Movie;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecyclerViewAdapter.MovieViewHolder> {
 
     private static final String TAG = "MovieRecyclerViewAdapter";
     private Context mContext;
-    private List<Movie> mMovieData;
+    private List<Movie> mMovieData = new ArrayList<>();
+    public static final int ADD_FAVORITE_REQUEST = 1;
 
     public MovieRecyclerViewAdapter(Context mContext, List<Movie> mMovieData) {
 
         this.mContext = mContext;
         this.mMovieData = mMovieData;
     }
+
+
 
     @NonNull
     @Override
@@ -63,14 +71,17 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
                 String itemClicked = mMovieData.get(position).getTitle();
                 Toast.makeText(mContext, "You clicked: " + itemClicked, Toast.LENGTH_SHORT).show();
 
-                mContext.startActivity(intent);
-            }
+                ((Activity) mContext).startActivityForResult(intent, ADD_FAVORITE_REQUEST);
+                //mContext.startActivity(intent);
+
+                }
         });
 
     }
 
     @Override
     public int getItemCount() {
+
         return mMovieData.size();
     }
 
@@ -86,6 +97,12 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
             parentLayout = itemView.findViewById(R.id.parent_layout);
         }
 
+    }
+
+    public void setMovies(List<Movie> movies) {
+
+        this.mMovieData =  movies;
+        notifyDataSetChanged();
     }
 
 }

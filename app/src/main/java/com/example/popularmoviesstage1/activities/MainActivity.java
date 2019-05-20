@@ -1,8 +1,14 @@
 package com.example.popularmoviesstage1.activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
@@ -20,6 +26,7 @@ import com.example.popularmoviesstage1.R;
 import com.example.popularmoviesstage1.adapters.MovieRecyclerViewAdapter;
 import com.example.popularmoviesstage1.models.MovieDBObject;
 import com.example.popularmoviesstage1.models.Movie;
+import com.example.popularmoviesstage1.models.MovieView;
 import com.example.popularmoviesstage1.utils.MovieApiUtils;
 import com.example.popularmoviesstage1.utils.MovieService;
 
@@ -33,6 +40,7 @@ import retrofit2.Callback;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    public static final int ADD_FAVORITE_REQUEST = 1;
 
     private MovieService retrofitService = MovieApiUtils.createService();
     private List<Movie> movieList;
@@ -43,9 +51,26 @@ public class MainActivity extends AppCompatActivity {
     private TextView errorText;
     private Button retryButton;
     private String sort;
+    private MovieView movieView;
 
     public static final String SAVED_PREFS = "savedPrefs";
     public static final String SORT = "sort";
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.d(TAG, "onActivityResult: TRIGGERED ");
+        if (requestCode == ADD_FAVORITE_REQUEST && resultCode == RESULT_OK) {
+            Movie movie = data.getParcelableExtra(DetailActivity.EXTRA_FAVORITE);
+
+
+
+            Toast.makeText(this, movie.getTitle() + " saved to favorites", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Movie NOT saved to favorites", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +88,26 @@ public class MainActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progress_bar);
         movieList = new ArrayList<>();
+
         recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+
+
+//        Movie movie = new Movie("297761", "testtitle", "testoverview", "2016-08-03", "5.91", "testurl");
+//        movieView = ViewModelProviders.of(this).get(MovieView.class);
+//        movieView.insert(movie);
+        //final MovieRecyclerViewAdapter adapter = new MovieRecyclerViewAdapter();
+
+        //Probably don't need onChanged.. if we're going to call DB when favorite option is selected
+//         movieView = ViewModelProviders.of(this).get(MovieView.class);
+//        movieView.getAllMovies().observe(this, new Observer<List<Movie>>() {
+//            @Override
+//            public void onChanged(List<Movie> movies) {
+//                Toast.makeText(MainActivity.this, "onChange triggered", Toast.LENGTH_SHORT).show();
+//                //startRecyclerView(movies);
+//                //recyclerView.setAdapter(adapter);
+//            }
+//        });
 
         retryButton = findViewById(R.id.reset_button);
         retryButton.setOnClickListener(new View.OnClickListener() {
@@ -89,15 +133,23 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "retrofit getPop string: " + callRatedMovies.toString());
                 callApi(callRatedMovies);
                 break;
+            case "Favorites":
+                //call room db, return list of movies
+                //startRecyclerView(MovieList);
+                //to reload onCreate with previous last option selected
+                break;
         }
+
+
     }
 
     private void startRecyclerView(List<Movie> movieList) {
 
-        MovieRecyclerViewAdapter movieAdapter = new MovieRecyclerViewAdapter(this, movieList);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
+        MovieRecyclerViewAdapter movieAdapter = new MovieRecyclerViewAdapter(this, movieList);
         recyclerView.setAdapter(movieAdapter);
+
+
     }
 
     @Override
@@ -128,6 +180,18 @@ public class MainActivity extends AppCompatActivity {
                 Call<MovieDBObject> callRatedMovies = retrofitService.getTopRatedMovies(MovieApiUtils.API_KEY);
                 Log.d(TAG, "retrofit getPop string: " + callRatedMovies.toString());
                 callApi(callRatedMovies);
+                savePref(item.getTitle().toString());
+                return true;
+
+            case R.id.favorite_sort_option:
+                Toast.makeText(this, "Favorite Sort selected", Toast.LENGTH_SHORT).show();
+
+                Log.d(TAG, "item title: " + item.getTitle());
+
+                //call room db, return list of movies
+                //movieList = movieView.getAllMovies();
+                //startRecyclerView(movieView.getAllMovies());
+
                 savePref(item.getTitle().toString());
                 return true;
         }
