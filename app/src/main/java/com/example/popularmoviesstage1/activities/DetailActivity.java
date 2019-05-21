@@ -102,6 +102,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setDetail(String title, String releaseYear, String overview, String releaseDate, String userRating, String posterUrl) {
+        Log.d(TAG, "releaseDate: " + releaseDate);
         Log.d(TAG, "posterUrl: " + posterUrl);
         TextView movieTitle = findViewById(R.id.movie_title);
         movieTitle.setText(title);
@@ -124,7 +125,7 @@ public class DetailActivity extends AppCompatActivity {
 
 
         Picasso.get()
-                .load(posterUrl)
+                .load("https://image.tmdb.org/t/p/w300" + posterUrl)
                 .resize(1000, 1500)
                 .into(image);
     }

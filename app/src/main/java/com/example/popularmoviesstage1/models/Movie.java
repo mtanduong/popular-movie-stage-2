@@ -92,7 +92,8 @@ public class Movie implements Parcelable {
         String baseDate = releaseDate;
         String[] parts = baseDate.split("-");
         String mReleaseDate = parts[1] + "/" + parts[2] + "/" + parts[0];
-        return mReleaseDate;
+        //return mReleaseDate;
+        return releaseDate;
     }
 
     public String getUserRating() {
@@ -101,13 +102,13 @@ public class Movie implements Parcelable {
     }
 
     public String getThumbnailImgUrl() {
-
-        return "https://image.tmdb.org/t/p/w185" + thumbnailImgUrl;
+        return thumbnailImgUrl;
+        //return "https://image.tmdb.org/t/p/w185" + thumbnailImgUrl;
     }
 
     public String getPosterUrl() {
-
-        return "https://image.tmdb.org/t/p/w300" + thumbnailImgUrl;
+        return thumbnailImgUrl;
+        //return "https://image.tmdb.org/t/p/w300" + thumbnailImgUrl;
     }
 
     public String getmYear() {

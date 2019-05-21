@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onChanged: Triggered DB changed");
                 //startRecyclerView(movies);
                 //recyclerView.setAdapter(adapter);
+                movieList = movies;
             }
         });
 
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 //call room db, return list of movies
                 //startRecyclerView(MovieList);
                 //to reload onCreate with previous last option selected
-                startRecyclerView(movieView.getAllMovies().getValue());
+                startRecyclerView(movieList);
                 break;
         }
 

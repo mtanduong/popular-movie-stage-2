@@ -55,7 +55,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     public void onBindViewHolder(@NonNull MovieViewHolder holder, final int position) {
 
         Picasso.get()
-                .load(mMovieData.get(position).getThumbnailImgUrl())
+                .load("https://image.tmdb.org/t/p/w185" + mMovieData.get(position).getThumbnailImgUrl())
                 .resize(650, 1000)
                 .centerInside()
                 .into(holder.thumbImg);
