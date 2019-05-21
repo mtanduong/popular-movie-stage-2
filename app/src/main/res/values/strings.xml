@@ -17,6 +17,7 @@
     <string name="most_popular">Most Popular</string>
     <string name="top_rated">Top Rated</string>
     <string name="favorites">Favorites</string>
+    <string name="delete_all">Delete All</string>
 
     <!-- Error -->
     <string name="no_connection_icon">No Connection Icon</string>

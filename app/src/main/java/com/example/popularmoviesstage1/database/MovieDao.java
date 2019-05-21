@@ -23,6 +23,9 @@ public interface MovieDao {
     @Delete
     void delete(Movie movie);
 
+    @Query("DELETE FROM favorites_table")
+    void deleteAllMovies();
+
     @Query("SELECT * FROM favorites_table ORDER BY userRating DESC")
     LiveData<List<Movie>> getAllMovies();
 

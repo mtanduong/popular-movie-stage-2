@@ -24,6 +24,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.sql.Types.NULL;
+
 public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecyclerViewAdapter.MovieViewHolder> {
 
     private static final String TAG = "MovieRecyclerViewAdapter";
@@ -36,8 +38,6 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
         this.mContext = mContext;
         this.mMovieData = mMovieData;
     }
-
-
 
     @NonNull
     @Override
@@ -81,7 +81,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
     @Override
     public int getItemCount() {
-
+        //return (mMovieData == NULL) ? 0 : mMovieData.size();
         return mMovieData.size();
     }
 

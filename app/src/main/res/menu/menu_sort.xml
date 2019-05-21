@@ -26,6 +26,10 @@
                 android:id="@+id/favorite_sort_option"
                 android:title="@string/favorites"
                 />
+            <item
+                android:id="@+id/delete_all_option"
+                android:title="@string/delete_all"
+                />
         </menu>
 
     </item>

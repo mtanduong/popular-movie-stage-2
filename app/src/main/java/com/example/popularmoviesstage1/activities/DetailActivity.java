@@ -40,7 +40,6 @@ public class DetailActivity extends AppCompatActivity {
     private ImageView favoriteButton;
     private List<Review> review;
     private Movie movie;
-    private MovieView movieViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,7 @@ public class DetailActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Toast.makeText(DetailActivity.this, mTitle + " added to Favorites", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(DetailActivity.this, mTitle + " added to Favorites", Toast.LENGTH_SHORT).show();
 
 //                Intent intent = new Intent(DetailActivity.this, MainActivity.class);
 //                movie = intent.getParcelableExtra("Movie Detail");
@@ -72,7 +71,6 @@ public class DetailActivity extends AppCompatActivity {
 
                 setResult(RESULT_OK, intent);
                 finish();
-                //movieViewModel.insert(movie);
 
             }
         });

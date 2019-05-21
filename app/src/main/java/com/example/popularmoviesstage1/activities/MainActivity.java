@@ -76,22 +76,25 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-
-//        Movie movie = new Movie("297761", "testtitle", "testoverview", "2016-08-03", "5.91", "testurl");
         movieView = ViewModelProviders.of(this).get(MovieView.class);
-//        movieView.insert(movie);
+
+//        MovieRecyclerViewAdapter movieAdapter = new MovieRecyclerViewAdapter(this, movieList);
+//        recyclerView.setAdapter(movieAdapter);
+
+
         //final MovieRecyclerViewAdapter adapter = new MovieRecyclerViewAdapter();
 
         //Probably don't need onChanged.. if we're going to call DB when favorite option is selected
-//         movieView = ViewModelProviders.of(this).get(MovieView.class);
-//        movieView.getAllMovies().observe(this, new Observer<List<Movie>>() {
-//            @Override
-//            public void onChanged(List<Movie> movies) {
-//                Toast.makeText(MainActivity.this, "onChange triggered", Toast.LENGTH_SHORT).show();
-//                //startRecyclerView(movies);
-//                //recyclerView.setAdapter(adapter);
-//            }
-//        });
+
+        movieView.getAllMovies().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(List<Movie> movies) {
+                //Toast.makeText(MainActivity.this, "onChange triggered DB change", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onChanged: Triggered DB changed");
+                //startRecyclerView(movies);
+                //recyclerView.setAdapter(adapter);
+            }
+        });
 
         retryButton = findViewById(R.id.reset_button);
         retryButton.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 //call room db, return list of movies
                 //startRecyclerView(MovieList);
                 //to reload onCreate with previous last option selected
+                startRecyclerView(movieView.getAllMovies().getValue());
                 break;
         }
 
@@ -179,16 +183,23 @@ public class MainActivity extends AppCompatActivity {
             case R.id.favorite_sort_option:
                 Toast.makeText(this, "Favorite Sort selected", Toast.LENGTH_SHORT).show();
 
-                Log.d(TAG, "item title: " + item.getTitle());
+                //Log.d(TAG, "item total: " + movieView.getAllMovies().getValue().size());
 
                 //call room db, return list of movies
                 //movieList = movieView.getAllMovies();
                 //startRecyclerView(movieView.getAllMovies());
+                startRecyclerView(movieView.getAllMovies().getValue());
 
                 savePref(item.getTitle().toString());
                 return true;
+            case R.id.delete_all_option:
+                movieView.deleteAllMovies();
+                Toast.makeText(this, "Deleted All Favorites", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+
     }
 
     private void startRecyclerView(List<Movie> movieList) {
