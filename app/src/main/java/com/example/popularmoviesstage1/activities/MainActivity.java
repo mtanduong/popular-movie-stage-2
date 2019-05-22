@@ -211,6 +211,12 @@ public class MainActivity extends AppCompatActivity {
             case R.id.delete_all_option:
                 movieView.deleteAllMovies();
                 Toast.makeText(this, "Deleted All Favorites", Toast.LENGTH_SHORT).show();
+                loadPref();
+                if (sort.equals("Favorites")) {
+                    movieList.clear();
+                    startRecyclerView(movieList);
+
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -298,5 +304,6 @@ public class MainActivity extends AppCompatActivity {
     private void loadPref() {
         SharedPreferences sharedPreferences = getSharedPreferences(SAVED_PREFS, MODE_PRIVATE);
         sort = sharedPreferences.getString(SORT, "Most Popular");
+        Log.d(TAG, "loadPref: " + sort);
     }
 }
