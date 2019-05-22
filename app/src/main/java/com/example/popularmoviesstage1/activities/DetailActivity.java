@@ -34,22 +34,29 @@ public class DetailActivity extends AppCompatActivity {
 
     private static final String TAG = "DetailActivity";
     public static final String EXTRA_FAVORITE = "EXTRA_FAVORITE";
+    public static final String EXTRA_UNFAVORITE = "EXTRA_UNFAVORITE";
     private MovieService retrofitService = MovieApiUtils.createService();
     private String mTitle;
     private List<Video> trailer;
     private ImageView favoriteButton;
+    private ImageView unfavoriteButton;
     private List<Review> review;
     private Movie movie;
+    private boolean favorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        favoriteButton = findViewById(R.id.favorite_button);
+        unfavoriteButton = findViewById(R.id.unfavorite_button);
+
         Log.d(TAG, "onCreate: Started");
         getIncomingIntent();
         setTitle(mTitle);
 
-        favoriteButton = findViewById(R.id.favorite_button);
+
 
         favoriteButton.setOnClickListener(new View.OnClickListener() {
 
@@ -74,6 +81,22 @@ public class DetailActivity extends AppCompatActivity {
 
             }
         });
+
+        unfavoriteButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = getIntent();
+                movie = intent.getParcelableExtra("Movie Detail");
+                Log.d(TAG, "onClick: REMOVING " + movie.getTitle());
+
+                intent.putExtra(EXTRA_UNFAVORITE, movie);
+
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
     }
 
     private void getIncomingIntent() {
@@ -81,12 +104,26 @@ public class DetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         movie = intent.getParcelableExtra("Movie Detail");
+        favorite = intent.getBooleanExtra("Favorite", true);
+        Log.d(TAG, "intentFavorite: " + favorite);
+
+        if (favorite) {
+            unfavoriteButton.setVisibility(View.GONE);
+            favoriteButton.setVisibility(View.VISIBLE);
+        } else {
+            unfavoriteButton.setVisibility(View.VISIBLE);
+            favoriteButton.setVisibility(View.GONE);
+        }
 
         String id = movie.getId();
         String title = movie.getTitle();
         String releaseYear = movie.getmYear();
         String overview = movie.getOverview();
         String releaseDate = movie.getReleaseDate();
+
+        String[] parts = releaseDate.split("-");
+        releaseDate = parts[1] + "/" + parts[2] + "/" + parts[0];
+
         String userReview = movie.getUserRating();
         String posterUrl = movie.getPosterUrl();
 

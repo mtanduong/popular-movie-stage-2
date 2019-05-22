@@ -23,6 +23,9 @@ public interface MovieDao {
     @Delete
     void delete(Movie movie);
 
+//    @Query("SELECT COUNT(*) FROM favorites_table")
+//    boolean favoriteCheck();
+
     @Query("DELETE FROM favorites_table")
     void deleteAllMovies();
 

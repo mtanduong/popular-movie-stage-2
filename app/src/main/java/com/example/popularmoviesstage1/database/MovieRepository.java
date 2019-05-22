@@ -31,6 +31,10 @@ public class MovieRepository {
         new DeleteMovieAsyncTask(movieDao).execute(movie);
     }
 
+//    public boolean favoriteCheck(Movie movie) {
+//        return (allMovies.getValue().contains(movie)) ? true : false;
+//    }
+
     public void deleteAllMovies() {
         new DeleteAllMoviesAsyncTask(movieDao).execute();
     }

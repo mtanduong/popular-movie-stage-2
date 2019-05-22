@@ -31,7 +31,9 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     private static final String TAG = "MovieRecyclerViewAdapter";
     private Context mContext;
     private List<Movie> mMovieData = new ArrayList<>();
+    private boolean favorite = true;
     public static final int ADD_FAVORITE_REQUEST = 1;
+    public static final int MINUS_FAVORITE_REQUEST = 2;
 
     public MovieRecyclerViewAdapter(Context mContext, List<Movie> mMovieData) {
 
@@ -67,6 +69,9 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
                 Intent intent = new Intent(mContext, DetailActivity.class);
 
                 intent.putExtra("Movie Detail", mMovieData.get(position));
+
+
+                intent.putExtra("Favorite", favorite);
 
                 String itemClicked = mMovieData.get(position).getTitle();
                 Toast.makeText(mContext, "You clicked: " + itemClicked, Toast.LENGTH_SHORT).show();

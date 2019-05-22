@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     public static final int ADD_FAVORITE_REQUEST = 1;
+    public static final int MINUS_FAVORITE_REQUEST = 2;
 
     private MovieService retrofitService = MovieApiUtils.createService();
     private List<Movie> movieList;
@@ -125,7 +126,8 @@ public class MainActivity extends AppCompatActivity {
                 //call room db, return list of movies
                 //startRecyclerView(MovieList);
                 //to reload onCreate with previous last option selected
-                startRecyclerView(movieList);
+                //startRecyclerView(movieView.getAllMovies().getValue());
+                progressBar.setVisibility(View.GONE);
                 break;
         }
 
@@ -138,13 +140,26 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "onActivityResult: TRIGGERED ");
         if (requestCode == ADD_FAVORITE_REQUEST && resultCode == RESULT_OK) {
-            Movie movie = data.getParcelableExtra(DetailActivity.EXTRA_FAVORITE);
+            Movie movie;
 
-            movieView.insert(movie);
+            //if  (DetailActivity.EXTRA_UNFAVORITE.isEmpty()) {
+            if (DetailActivity.EXTRA_FAVORITE.equals("EXTRA_FAVORITE")) {
+                movie = data.getParcelableExtra(DetailActivity.EXTRA_FAVORITE);
+                movieView.insert(movie);
+                Log.d(TAG, "Successfully inserted into DB: " + movie.getTitle());
+                Toast.makeText(this, movie.getTitle() + " saved to favorites", Toast.LENGTH_SHORT).show();
+            } else {
+                movie = data.getParcelableExtra(DetailActivity.EXTRA_UNFAVORITE);
+                movieView.delete(movie);
+                Log.d(TAG, "Successfully removed from DB: " + movie.getTitle());
+                Toast.makeText(this, movie.getTitle() + " deleted from favorites", Toast.LENGTH_SHORT).show();
+            }
+            //Movie movie = data.getParcelableExtra(DetailActivity.EXTRA_FAVORITE);
 
-            Log.d(TAG, "Successfully inserted into DB: " + movie.getTitle());
+           // movieView.insert(movie);
 
-            Toast.makeText(this, movie.getTitle() + " saved to favorites", Toast.LENGTH_SHORT).show();
+            //Log.d(TAG, "Successfully inserted into DB: " + movie.getTitle());
+
         } else {
             Toast.makeText(this, "Movie NOT saved to favorites", Toast.LENGTH_SHORT).show();
         }
