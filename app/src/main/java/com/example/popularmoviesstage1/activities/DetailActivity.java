@@ -34,7 +34,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private static final String TAG = "DetailActivity";
     public static final String EXTRA_FAVORITE = "EXTRA_FAVORITE";
-    public static final String EXTRA_UNFAVORITE = "EXTRA_UNFAVORITE";
+    public static final String EXTRA_MODIFY = "EXTRA_MODIFY";
     private MovieService retrofitService = MovieApiUtils.createService();
     private String mTitle;
     private List<Video> trailer;
@@ -43,6 +43,7 @@ public class DetailActivity extends AppCompatActivity {
     private List<Review> review;
     private Movie movie;
     private boolean favorite;
+    private String sort;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +76,7 @@ public class DetailActivity extends AppCompatActivity {
                 Log.d(TAG, "onClick: INSERTING " + movie.getTitle());
 
                 intent.putExtra(EXTRA_FAVORITE, movie);
+                intent.putExtra(EXTRA_MODIFY, true);
 
                 setResult(RESULT_OK, intent);
                 finish();
@@ -91,7 +93,8 @@ public class DetailActivity extends AppCompatActivity {
                 movie = intent.getParcelableExtra("Movie Detail");
                 Log.d(TAG, "onClick: REMOVING " + movie.getTitle());
 
-                intent.putExtra(EXTRA_UNFAVORITE, movie);
+                intent.putExtra(EXTRA_FAVORITE, movie);
+                intent.putExtra(EXTRA_MODIFY, false);
 
                 setResult(RESULT_OK, intent);
                 finish();
@@ -104,10 +107,10 @@ public class DetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         movie = intent.getParcelableExtra("Movie Detail");
-        favorite = intent.getBooleanExtra("Favorite", true);
+        favorite = intent.getBooleanExtra("Favorite", false);
         Log.d(TAG, "intentFavorite: " + favorite);
 
-        if (favorite) {
+        if (!favorite) {
             unfavoriteButton.setVisibility(View.GONE);
             favoriteButton.setVisibility(View.VISIBLE);
         } else {
@@ -139,8 +142,13 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setDetail(String title, String releaseYear, String overview, String releaseDate, String userRating, String posterUrl) {
-        Log.d(TAG, "releaseDate: " + releaseDate);
-        Log.d(TAG, "posterUrl: " + posterUrl);
+        Log.d(TAG, "setDetail - title: " + title);
+        Log.d(TAG, "setDetail - releaseYear: " + releaseYear);
+        Log.d(TAG, "setDetail - overview: " + overview);
+        Log.d(TAG, "setDetail - releaseDate: " + releaseDate);
+        Log.d(TAG, "setDetail - userrating: " + userRating);
+        Log.d(TAG, "setDetail - posterurl: " + posterUrl);
+
         TextView movieTitle = findViewById(R.id.movie_title);
         movieTitle.setText(title);
         mTitle = title;

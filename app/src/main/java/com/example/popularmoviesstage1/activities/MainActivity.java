@@ -142,18 +142,22 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == ADD_FAVORITE_REQUEST && resultCode == RESULT_OK) {
             Movie movie;
 
-            //if  (DetailActivity.EXTRA_UNFAVORITE.isEmpty()) {
-            if (DetailActivity.EXTRA_FAVORITE.equals("EXTRA_FAVORITE")) {
+            if  (data.getBooleanExtra(DetailActivity.EXTRA_MODIFY, false)) {
+            //if (DetailActivity.EXTRA_FAVORITE.equals("EXTRA_FAVORITE")) {
                 movie = data.getParcelableExtra(DetailActivity.EXTRA_FAVORITE);
+               // movie.setFavorite("true");
                 movieView.insert(movie);
                 Log.d(TAG, "Successfully inserted into DB: " + movie.getTitle());
                 Toast.makeText(this, movie.getTitle() + " saved to favorites", Toast.LENGTH_SHORT).show();
             } else {
-                movie = data.getParcelableExtra(DetailActivity.EXTRA_UNFAVORITE);
+                movie = data.getParcelableExtra(DetailActivity.EXTRA_FAVORITE);
+                //movie.setFavorite(false);
                 movieView.delete(movie);
                 Log.d(TAG, "Successfully removed from DB: " + movie.getTitle());
                 Toast.makeText(this, movie.getTitle() + " deleted from favorites", Toast.LENGTH_SHORT).show();
             }
+
+            movieList = movieView.getAllMovies().getValue();
             //Movie movie = data.getParcelableExtra(DetailActivity.EXTRA_FAVORITE);
 
            // movieView.insert(movie);
@@ -225,8 +229,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startRecyclerView(List<Movie> movieList) {
-
-        MovieRecyclerViewAdapter movieAdapter = new MovieRecyclerViewAdapter(this, movieList);
+        loadPref();
+        MovieRecyclerViewAdapter movieAdapter = new MovieRecyclerViewAdapter(this, movieList, movieView.getAllMovies().getValue(), sort);
         recyclerView.setAdapter(movieAdapter);
     }
 
@@ -287,6 +291,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "moviename: " + movieList.get(0).getOverview());
         Log.d(TAG, "moviename: " + movieList.get(0).getReleaseDate());
         Log.d(TAG, "moviename: " + movieList.get(0).getUserRating());
+        //Log.d(TAG, "parseMovies - favorite: " + movieList.get(0).getFavorite());
 
         startRecyclerView(movieList);
         progressBar.setVisibility(View.GONE);

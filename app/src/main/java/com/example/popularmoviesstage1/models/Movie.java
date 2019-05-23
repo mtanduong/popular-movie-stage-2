@@ -33,6 +33,9 @@ public class Movie implements Parcelable {
     @SerializedName("poster_path")
     private String thumbnailImgUrl;
 
+    @SerializedName("favorite")
+    private String favorite = "false";
+
     //@SerializedName("baseImgUrl")
     //private String mPosterUrl = "";
 
@@ -56,6 +59,7 @@ public class Movie implements Parcelable {
         releaseDate = in.readString();
         userRating = in.readString();
         thumbnailImgUrl = in.readString();
+        //favorite = in.readString();
         //mPosterUrl = in.readString();
         //BASE_URL_THUMB = in.readString();
         //BASE_URL_POSTER = in.readString();
@@ -89,10 +93,7 @@ public class Movie implements Parcelable {
     }
 
     public String getReleaseDate() {
-        String baseDate = releaseDate;
-        String[] parts = baseDate.split("-");
-        String mReleaseDate = parts[1] + "/" + parts[2] + "/" + parts[0];
-        //return mReleaseDate;
+
         return releaseDate;
     }
 
@@ -116,6 +117,10 @@ public class Movie implements Parcelable {
         String[] parts = baseDate.split("-");
         String releaseYear = parts[0];
         return releaseYear;
+    }
+
+    public String getFavorite() {
+        return favorite;
     }
 
     public void setId(String id) {
@@ -153,6 +158,10 @@ public class Movie implements Parcelable {
 //        this.mPosterUrl = mPosterUrl;
 //    }
 
+    public void setFavorite (String mFavorite) {
+        this.favorite = mFavorite;
+    }
+
     @Override
     public int describeContents() {
 
@@ -168,6 +177,7 @@ public class Movie implements Parcelable {
         parcel.writeString(releaseDate);
         parcel.writeString(userRating);
         parcel.writeString(thumbnailImgUrl);
+        //parcel.writeString(favorite);
         //parcel.writeString(mPosterUrl);
         //parcel.writeString(BASE_URL_THUMB);
         //parcel.writeString(BASE_URL_POSTER);

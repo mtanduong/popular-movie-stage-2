@@ -22,16 +22,20 @@ import com.example.popularmoviesstage1.models.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static java.sql.Types.NULL;
 
 public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecyclerViewAdapter.MovieViewHolder> {
 
-    private static final String TAG = "MovieRecyclerViewAdapter";
+    private static final String TAG = "MovieAdapter";
     private Context mContext;
     private List<Movie> mMovieData = new ArrayList<>();
-    private boolean favorite = true;
+    private List<Movie> mFavoriteData = new ArrayList<>();
+    private String sort;
+    //private String favorite;
+    private boolean favorite;
     public static final int ADD_FAVORITE_REQUEST = 1;
     public static final int MINUS_FAVORITE_REQUEST = 2;
 
@@ -39,6 +43,14 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
         this.mContext = mContext;
         this.mMovieData = mMovieData;
+    }
+
+    public MovieRecyclerViewAdapter(Context mContext, List<Movie> mMovieData, List<Movie> mFavoriteData, String mSort) {
+
+        this.mContext = mContext;
+        this.mMovieData = mMovieData;
+        this.mFavoriteData = mFavoriteData;
+        this.sort = mSort;
     }
 
     @NonNull
@@ -70,8 +82,16 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
                 intent.putExtra("Movie Detail", mMovieData.get(position));
 
+                if (containsMovie(mFavoriteData, mMovieData.get(position).getId())) {
+                    Log.d(TAG, "containsMovie: " + mMovieData.get(position).getTitle() + " is a favorite");
+                    favorite = true;
+                } else {
+                    Log.d(TAG, "containsMovie: " + mMovieData.get(position).getTitle() + " is not a favorite");
+                    favorite = false;
+                }
 
                 intent.putExtra("Favorite", favorite);
+                //intent.putExtra("Sort", sort);
 
                 String itemClicked = mMovieData.get(position).getTitle();
                 Toast.makeText(mContext, "You clicked: " + itemClicked, Toast.LENGTH_SHORT).show();
@@ -108,6 +128,17 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
         this.mMovieData =  movies;
         notifyDataSetChanged();
+    }
+
+    public static boolean containsMovie(Collection<Movie> favoriteMovies, String id) {
+        for(Movie movie : favoriteMovies) {
+            if(movie != null && movie.getId().equals(id)) {
+                Log.d(TAG, "containsMovie: checked as TRUE");
+                return true;
+            }
+        }
+        Log.d(TAG, "containsMovie: checked as FALSE");
+        return false;
     }
 
 }
