@@ -114,6 +114,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     }
 
     public static boolean containsMovie(Collection<Movie> favoriteMovies, String id) {
+        Log.d(TAG, "MovieAdapter/containsMovie: Favorite movie list size: " + favoriteMovies.size());
         for(Movie movie : favoriteMovies) {
             if(movie != null && movie.getId().equals(id)) {
                 Log.d(TAG, "containsMovie: checked as TRUE");

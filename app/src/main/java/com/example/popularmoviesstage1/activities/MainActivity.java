@@ -41,12 +41,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     public static final int ADD_FAVORITE_REQUEST = 1;
-    public static final int MINUS_FAVORITE_REQUEST = 2;
+    public static final String SAVED_PREFS = "savedPrefs";
+    public static final String SORT = "sort";
 
     private MovieService retrofitService = MovieApiUtils.createService();
     private List<Movie> movieList;
-    private List<Movie> popularSnapshot;
-    private List<Movie> ratedSnapshot;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private ImageView noConnection;
@@ -55,9 +54,6 @@ public class MainActivity extends AppCompatActivity {
     private Button retryButton;
     private String sort;
     private MovieView movieView;
-
-    public static final String SAVED_PREFS = "savedPrefs";
-    public static final String SORT = "sort";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,15 +116,13 @@ public class MainActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 break;
         }
-
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.d(TAG, "MainActivity/onActivityResult: TRIGGERED - There was a change in DetailActivity (favorited/unfavorited");
+        Log.d(TAG, "MainActivity/onActivityResult: TRIGGERED - There was a change in DetailActivity (favorited/unfavorited)");
         if (requestCode == ADD_FAVORITE_REQUEST && resultCode == RESULT_OK) {
             Movie movie;
 
@@ -137,15 +131,30 @@ public class MainActivity extends AppCompatActivity {
                 movieView.insert(movie);
                 Log.d(TAG, "Successfully inserted into LiveData DB: " + movie.getTitle());
                 Toast.makeText(this, movie.getTitle() + " saved to favorites", Toast.LENGTH_SHORT).show();
+
+                movieList = movieView.getAllMovies().getValue();
+                movieList.add(movie);
             } else {
                 movie = data.getParcelableExtra(DetailActivity.EXTRA_FAVORITE);
                 movieView.delete(movie);
                 Log.d(TAG, "Successfully removed from LiveData DB: " + movie.getTitle());
                 Toast.makeText(this, movie.getTitle() + " deleted from favorites", Toast.LENGTH_SHORT).show();
+
+                movieList = movieView.getAllMovies().getValue();
+                //movieList.remove(movie);
+
+                int i = 0;
+                for(Movie iMovie : movieList) {
+                    if (iMovie != null && iMovie.getId().equals(movie.getId())) {
+                        movieList.remove(i);
+                        break;
+                    }
+                    i++;
+                }
             }
 
-            Log.d(TAG, "MainActivity/onActivityResult/post LiveData modification: Saving latest list of favorite movies");
-            movieList = movieView.getAllMovies().getValue();
+
+            Log.d(TAG, "MainActivity/onActivityResult/post LiveData modification: Saving latest list of favorite movies. Fav count: " + movieList.size());
             loadPref();
 
             if (sort.equals("Most Popular")) {
@@ -159,6 +168,11 @@ public class MainActivity extends AppCompatActivity {
                 Call<MovieDBObject> callRatedMovies = retrofitService.getTopRatedMovies(MovieApiUtils.API_KEY);
 
                 callApi(callRatedMovies);
+            }
+            if (sort.equals("Favorites")) {
+                Log.d(TAG, "MainActivity/onActivityResult/Refreshing Favorites list: Reloading recyclerview");
+
+                startRecyclerView(movieList);
             }
             //startRecyclerView();
 
@@ -285,17 +299,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Movie> parseMovies(MovieDBObject movieObject) {
         Log.d(TAG, "parseMovies started");
 
-
         movieList = movieObject.getMovieList();
-
-        Log.d(TAG, "moviename: " + movieList.get(0).getTitle());
-        Log.d(TAG, "moviename: " + movieList.get(0).getThumbnailImgUrl());
-        Log.d(TAG, "moviename: " + movieList.get(0).getPosterUrl());
-        Log.d(TAG, "moviename: " + movieList.get(0).getOverview());
-        Log.d(TAG, "moviename: " + movieList.get(0).getReleaseDate());
-        Log.d(TAG, "moviename: " + movieList.get(0).getUserRating());
-
-        //startRecyclerView(movieList);
 
         return movieObject.getMovieList();
     }
