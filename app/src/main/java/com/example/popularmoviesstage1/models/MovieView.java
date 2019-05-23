@@ -33,8 +33,6 @@ public class MovieView extends AndroidViewModel {
         repository.delete(movie);
     }
 
-    public boolean favoriteCheck(Movie movie) { return (allMovies.getValue().contains(movie)) ? true : false; }
-
     public void deleteAllMovies() {
         repository.deleteAllMovies();
     }

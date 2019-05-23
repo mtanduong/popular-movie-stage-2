@@ -45,7 +45,6 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
         holder.mUser.setText(currentReview.getAuthor());
 
         holder.mReview.setText(currentReview.getContent());
-
     }
 
     @Override

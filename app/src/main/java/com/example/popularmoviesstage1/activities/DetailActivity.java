@@ -9,13 +9,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.popularmoviesstage1.R;
 import com.example.popularmoviesstage1.adapters.ReviewRecyclerViewAdapter;
 import com.example.popularmoviesstage1.adapters.TrailerRecyclerViewAdapter;
 import com.example.popularmoviesstage1.models.Movie;
-import com.example.popularmoviesstage1.models.MovieView;
 import com.example.popularmoviesstage1.models.Review;
 import com.example.popularmoviesstage1.models.ReviewDBObject;
 import com.example.popularmoviesstage1.models.Video;
@@ -43,7 +41,6 @@ public class DetailActivity extends AppCompatActivity {
     private List<Review> review;
     private Movie movie;
     private boolean favorite;
-    private String sort;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,19 +54,10 @@ public class DetailActivity extends AppCompatActivity {
         getIncomingIntent();
         setTitle(mTitle);
 
-
-
         favoriteButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                //Toast.makeText(DetailActivity.this, mTitle + " added to Favorites", Toast.LENGTH_SHORT).show();
-
-//                Intent intent = new Intent(DetailActivity.this, MainActivity.class);
-//                movie = intent.getParcelableExtra("Movie Detail");
-//                intent.putExtra(EXTRA_FAVORITE, movie);
-//                setResult(RESULT_OK, intent);
-//                finish();
 
                 Intent intent = getIntent();
                 movie = intent.getParcelableExtra("Movie Detail");
@@ -167,8 +155,6 @@ public class DetailActivity extends AppCompatActivity {
 
         ImageView image = findViewById(R.id.movie_poster);
 
-
-
         Picasso.get()
                 .load("https://image.tmdb.org/t/p/w300" + posterUrl)
                 .resize(1000, 1500)
@@ -189,7 +175,6 @@ public class DetailActivity extends AppCompatActivity {
                 if (response.body().getResults().size() > 0) {
                     parseVideos(response.body());
                 }
-
             }
 
             @Override

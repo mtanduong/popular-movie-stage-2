@@ -1,6 +1,5 @@
 package com.example.popularmoviesstage1.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -141,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, movie.getTitle() + " deleted from favorites", Toast.LENGTH_SHORT).show();
 
                 movieList = movieView.getAllMovies().getValue();
-                //movieList.remove(movie);
 
                 int i = 0;
                 for(Movie iMovie : movieList) {
@@ -152,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
                     i++;
                 }
             }
-
 
             Log.d(TAG, "MainActivity/onActivityResult/post LiveData modification: Saving latest list of favorite movies. Fav count: " + movieList.size());
             loadPref();
@@ -174,10 +171,8 @@ public class MainActivity extends AppCompatActivity {
 
                 startRecyclerView(movieList);
             }
-            //startRecyclerView();
-
         } else {
-            Toast.makeText(this, "Movie NOT saved to favorites", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Movie NOT saved to favorites", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -241,7 +236,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startRecyclerView(List<Movie> movieList) {
-        //loadPref();
         MovieRecyclerViewAdapter movieAdapter = new MovieRecyclerViewAdapter(this, movieList, movieView.getAllMovies().getValue());
         recyclerView.setAdapter(movieAdapter);
     }
@@ -249,7 +243,6 @@ public class MainActivity extends AppCompatActivity {
     private void callApi(Call<MovieDBObject> call) {
 
         Log.d(TAG, "called callApi");
-        //List<Movie> movieList = new ArrayList<>();
         progressBar.setVisibility(View.VISIBLE);
         call.enqueue(new Callback<MovieDBObject>() {
             @Override

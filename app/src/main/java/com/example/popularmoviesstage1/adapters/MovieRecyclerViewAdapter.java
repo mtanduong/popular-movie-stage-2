@@ -30,11 +30,11 @@ import static java.sql.Types.NULL;
 public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecyclerViewAdapter.MovieViewHolder> {
 
     private static final String TAG = "MovieAdapter";
+    private static final int ADD_FAVORITE_REQUEST = 1;
     private Context mContext;
     private List<Movie> mMovieData;
     private List<Movie> mFavoriteData;
     private boolean favorite;
-    public static final int ADD_FAVORITE_REQUEST = 1;
 
     public MovieRecyclerViewAdapter(Context mContext, List<Movie> mMovieData, List<Movie> mFavoriteData) {
 
@@ -87,9 +87,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
                 Toast.makeText(mContext, "You clicked: " + itemClicked, Toast.LENGTH_SHORT).show();
 
                 ((Activity) mContext).startActivityForResult(intent, ADD_FAVORITE_REQUEST);
-                //mContext.startActivity(intent);
-
-                }
+            }
         });
 
     }
@@ -110,7 +108,6 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
             thumbImg = itemView.findViewById(R.id.posterImg);
             parentLayout = itemView.findViewById(R.id.parent_layout);
         }
-
     }
 
     public static boolean containsMovie(Collection<Movie> favoriteMovies, String id) {
@@ -124,5 +121,4 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
         Log.d(TAG, "containsMovie: checked as FALSE");
         return false;
     }
-
 }
