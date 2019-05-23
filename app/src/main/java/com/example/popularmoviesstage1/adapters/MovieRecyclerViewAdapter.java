@@ -31,26 +31,16 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
     private static final String TAG = "MovieAdapter";
     private Context mContext;
-    private List<Movie> mMovieData = new ArrayList<>();
-    private List<Movie> mFavoriteData = new ArrayList<>();
-    private String sort;
-    //private String favorite;
+    private List<Movie> mMovieData;
+    private List<Movie> mFavoriteData;
     private boolean favorite;
     public static final int ADD_FAVORITE_REQUEST = 1;
-    public static final int MINUS_FAVORITE_REQUEST = 2;
 
-    public MovieRecyclerViewAdapter(Context mContext, List<Movie> mMovieData) {
-
-        this.mContext = mContext;
-        this.mMovieData = mMovieData;
-    }
-
-    public MovieRecyclerViewAdapter(Context mContext, List<Movie> mMovieData, List<Movie> mFavoriteData, String mSort) {
+    public MovieRecyclerViewAdapter(Context mContext, List<Movie> mMovieData, List<Movie> mFavoriteData) {
 
         this.mContext = mContext;
         this.mMovieData = mMovieData;
         this.mFavoriteData = mFavoriteData;
-        this.sort = mSort;
     }
 
     @NonNull
@@ -81,17 +71,17 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
                 Intent intent = new Intent(mContext, DetailActivity.class);
 
                 intent.putExtra("Movie Detail", mMovieData.get(position));
-
+                Log.d(TAG, "MovieAdapter/onClick: Saving movie object into Intent");
                 if (containsMovie(mFavoriteData, mMovieData.get(position).getId())) {
-                    Log.d(TAG, "containsMovie: " + mMovieData.get(position).getTitle() + " is a favorite");
+                    Log.d(TAG, "MovieAdapter/onClick/favoriteCheck: " + mMovieData.get(position).getTitle() + " is a favorite. Set fav flag to true");
                     favorite = true;
                 } else {
-                    Log.d(TAG, "containsMovie: " + mMovieData.get(position).getTitle() + " is not a favorite");
+                    Log.d(TAG, "MovieAdapter/onClick/favoriteCheck: " + mMovieData.get(position).getTitle() + " is not a favorite. Set fav flag to false");
                     favorite = false;
                 }
 
                 intent.putExtra("Favorite", favorite);
-                //intent.putExtra("Sort", sort);
+                Log.d(TAG, "MovieAdapter/onClick: Saving favorite flag into Intent. Flag set as " + favorite);
 
                 String itemClicked = mMovieData.get(position).getTitle();
                 Toast.makeText(mContext, "You clicked: " + itemClicked, Toast.LENGTH_SHORT).show();
@@ -106,7 +96,6 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
     @Override
     public int getItemCount() {
-        //return (mMovieData == NULL) ? 0 : mMovieData.size();
         return mMovieData.size();
     }
 
@@ -122,12 +111,6 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
             parentLayout = itemView.findViewById(R.id.parent_layout);
         }
 
-    }
-
-    public void setMovies(List<Movie> movies) {
-
-        this.mMovieData =  movies;
-        notifyDataSetChanged();
     }
 
     public static boolean containsMovie(Collection<Movie> favoriteMovies, String id) {

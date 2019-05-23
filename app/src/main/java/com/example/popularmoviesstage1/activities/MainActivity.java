@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
     private MovieService retrofitService = MovieApiUtils.createService();
     private List<Movie> movieList;
+    private List<Movie> popularSnapshot;
+    private List<Movie> ratedSnapshot;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private ImageView noConnection;
@@ -79,21 +81,11 @@ public class MainActivity extends AppCompatActivity {
 
         movieView = ViewModelProviders.of(this).get(MovieView.class);
 
-//        MovieRecyclerViewAdapter movieAdapter = new MovieRecyclerViewAdapter(this, movieList);
-//        recyclerView.setAdapter(movieAdapter);
-
-
-        //final MovieRecyclerViewAdapter adapter = new MovieRecyclerViewAdapter();
-
-        //Probably don't need onChanged.. if we're going to call DB when favorite option is selected
-
         movieView.getAllMovies().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(List<Movie> movies) {
-                //Toast.makeText(MainActivity.this, "onChange triggered DB change", Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "onChanged: Triggered DB changed");
-                //startRecyclerView(movies);
-                //recyclerView.setAdapter(adapter);
+                Log.d(TAG, "MainActivity/movieView.getAllMovies().observe/onChanged: LiveData DB change detected - saving latest list to movieList");
+
                 movieList = movies;
             }
         });
@@ -114,19 +106,17 @@ public class MainActivity extends AppCompatActivity {
         switch (sort) {
             case "Most Popular":
                 Call<MovieDBObject> callPopularMovies = retrofitService.getPopularMovies(MovieApiUtils.API_KEY);
-                Log.d(TAG, "retrofit getPop string: " + callPopularMovies.toString());
+                Log.d(TAG, "MainActivity/loadPref/switch: Loading preference - Most Popular " + callPopularMovies.toString());
                 callApi(callPopularMovies);
                 break;
             case "Top Rated":
                 Call<MovieDBObject> callRatedMovies = retrofitService.getTopRatedMovies(MovieApiUtils.API_KEY);
-                Log.d(TAG, "retrofit getPop string: " + callRatedMovies.toString());
+                Log.d(TAG, "MainActivity/loadPref/switch: Loading preference - Top Rated " + callRatedMovies.toString());
                 callApi(callRatedMovies);
                 break;
             case "Favorites":
-                //call room db, return list of movies
-                //startRecyclerView(MovieList);
-                //to reload onCreate with previous last option selected
-                //startRecyclerView(movieView.getAllMovies().getValue());
+                Log.d(TAG, "MainActivity/loadPref/switch: Loading preference - Favorites ");
+                //WIP
                 progressBar.setVisibility(View.GONE);
                 break;
         }
@@ -138,31 +128,39 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.d(TAG, "onActivityResult: TRIGGERED ");
+        Log.d(TAG, "MainActivity/onActivityResult: TRIGGERED - There was a change in DetailActivity (favorited/unfavorited");
         if (requestCode == ADD_FAVORITE_REQUEST && resultCode == RESULT_OK) {
             Movie movie;
 
             if  (data.getBooleanExtra(DetailActivity.EXTRA_MODIFY, false)) {
-            //if (DetailActivity.EXTRA_FAVORITE.equals("EXTRA_FAVORITE")) {
                 movie = data.getParcelableExtra(DetailActivity.EXTRA_FAVORITE);
-               // movie.setFavorite("true");
                 movieView.insert(movie);
-                Log.d(TAG, "Successfully inserted into DB: " + movie.getTitle());
+                Log.d(TAG, "Successfully inserted into LiveData DB: " + movie.getTitle());
                 Toast.makeText(this, movie.getTitle() + " saved to favorites", Toast.LENGTH_SHORT).show();
             } else {
                 movie = data.getParcelableExtra(DetailActivity.EXTRA_FAVORITE);
-                //movie.setFavorite(false);
                 movieView.delete(movie);
-                Log.d(TAG, "Successfully removed from DB: " + movie.getTitle());
+                Log.d(TAG, "Successfully removed from LiveData DB: " + movie.getTitle());
                 Toast.makeText(this, movie.getTitle() + " deleted from favorites", Toast.LENGTH_SHORT).show();
             }
 
+            Log.d(TAG, "MainActivity/onActivityResult/post LiveData modification: Saving latest list of favorite movies");
             movieList = movieView.getAllMovies().getValue();
-            //Movie movie = data.getParcelableExtra(DetailActivity.EXTRA_FAVORITE);
+            loadPref();
 
-           // movieView.insert(movie);
+            if (sort.equals("Most Popular")) {
+                Log.d(TAG, "MainActivity/onActivityResult/Refreshing Most Popular list: Calling API and reloading recyclerview");
+                Call<MovieDBObject> callPopularMovies = retrofitService.getPopularMovies(MovieApiUtils.API_KEY);
 
-            //Log.d(TAG, "Successfully inserted into DB: " + movie.getTitle());
+                callApi(callPopularMovies);
+            }
+            if (sort.equals("Top Rated")) {
+                Log.d(TAG, "MainActivity/onActivityResult/Refreshing Top Rated list: Calling API and reloading recyclerview");
+                Call<MovieDBObject> callRatedMovies = retrofitService.getTopRatedMovies(MovieApiUtils.API_KEY);
+
+                callApi(callRatedMovies);
+            }
+            //startRecyclerView();
 
         } else {
             Toast.makeText(this, "Movie NOT saved to favorites", Toast.LENGTH_SHORT).show();
@@ -183,9 +181,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.popular_sort_option:
                 Toast.makeText(this, "Popular Sort selected", Toast.LENGTH_SHORT).show();
 
-                Log.d(TAG, "item title: " + item.getTitle());
+                Log.d(TAG, "MainActivity/onOptionsItemSelected: Selected menu option " + item.getTitle());
                 Call<MovieDBObject> callPopularMovies = retrofitService.getPopularMovies(MovieApiUtils.API_KEY);
-                Log.d(TAG, "retrofit getPop string: " + callPopularMovies.toString());
+
                 callApi(callPopularMovies);
                 savePref(item.getTitle().toString());
                 return true;
@@ -193,9 +191,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.rating_sort_option:
                 Toast.makeText(this, "Rated Sort selected", Toast.LENGTH_SHORT).show();
 
-                Log.d(TAG, "item title: " + item.getTitle());
+                Log.d(TAG, "MainActivity/onOptionsItemSelected: Selected menu option " + item.getTitle());
                 Call<MovieDBObject> callRatedMovies = retrofitService.getTopRatedMovies(MovieApiUtils.API_KEY);
-                Log.d(TAG, "retrofit getPop string: " + callRatedMovies.toString());
+
                 callApi(callRatedMovies);
                 savePref(item.getTitle().toString());
                 return true;
@@ -203,11 +201,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.favorite_sort_option:
                 Toast.makeText(this, "Favorite Sort selected", Toast.LENGTH_SHORT).show();
 
-                //Log.d(TAG, "item total: " + movieView.getAllMovies().getValue().size());
+                Log.d(TAG, "MainActivity/onOptionsItemSelected: Selected menu option " + item.getTitle());
 
-                //call room db, return list of movies
-                //movieList = movieView.getAllMovies();
-                //startRecyclerView(movieView.getAllMovies());
                 startRecyclerView(movieView.getAllMovies().getValue());
 
                 savePref(item.getTitle().toString());
@@ -215,8 +210,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.delete_all_option:
                 movieView.deleteAllMovies();
                 Toast.makeText(this, "Deleted All Favorites", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "MainActivity/onOptionsItemSelected: Selected menu option " + item.getTitle());
                 loadPref();
+
                 if (sort.equals("Favorites")) {
+                    Log.d(TAG, "MainActivity/onOptionsItemSelected/delete case: Refreshing Favorite recyclerview since favorites are deleted");
                     movieList.clear();
                     startRecyclerView(movieList);
 
@@ -229,14 +227,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startRecyclerView(List<Movie> movieList) {
-        loadPref();
-        MovieRecyclerViewAdapter movieAdapter = new MovieRecyclerViewAdapter(this, movieList, movieView.getAllMovies().getValue(), sort);
+        //loadPref();
+        MovieRecyclerViewAdapter movieAdapter = new MovieRecyclerViewAdapter(this, movieList, movieView.getAllMovies().getValue());
         recyclerView.setAdapter(movieAdapter);
     }
 
     private void callApi(Call<MovieDBObject> call) {
 
         Log.d(TAG, "called callApi");
+        //List<Movie> movieList = new ArrayList<>();
         progressBar.setVisibility(View.VISIBLE);
         call.enqueue(new Callback<MovieDBObject>() {
             @Override
@@ -250,8 +249,16 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 Log.d(TAG, "pre parseMovies");
+                //progressBar.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
+                errorText.setVisibility(View.GONE);
+                noConnection.setVisibility(View.GONE);
+                noServer.setVisibility(View.GONE);
+                retryButton.setVisibility(View.GONE);
+                //parseMovies(response.body());
+                startRecyclerView(parseMovies(response.body()));
+                //movieList = parseMovies(response.body());
                 progressBar.setVisibility(View.GONE);
-                parseMovies(response.body());
                 Log.d(TAG, "post parseMovies");
             }
 
@@ -275,13 +282,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void parseMovies(MovieDBObject movieObject) {
+    private List<Movie> parseMovies(MovieDBObject movieObject) {
         Log.d(TAG, "parseMovies started");
-        progressBar.setVisibility(View.VISIBLE);
-        errorText.setVisibility(View.GONE);
-        noConnection.setVisibility(View.GONE);
-        noServer.setVisibility(View.GONE);
-        retryButton.setVisibility(View.GONE);
+
 
         movieList = movieObject.getMovieList();
 
@@ -291,10 +294,10 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "moviename: " + movieList.get(0).getOverview());
         Log.d(TAG, "moviename: " + movieList.get(0).getReleaseDate());
         Log.d(TAG, "moviename: " + movieList.get(0).getUserRating());
-        //Log.d(TAG, "parseMovies - favorite: " + movieList.get(0).getFavorite());
 
-        startRecyclerView(movieList);
-        progressBar.setVisibility(View.GONE);
+        //startRecyclerView(movieList);
+
+        return movieObject.getMovieList();
     }
 
     private void savePref(String sort) {
@@ -303,12 +306,12 @@ public class MainActivity extends AppCompatActivity {
 
         editor.putString(SORT, sort);
         editor.apply();
-        Log.d(TAG, "Saving pref: " + sort);
+        Log.d(TAG, "Saving preferences: sort set as " + sort);
     }
 
     private void loadPref() {
         SharedPreferences sharedPreferences = getSharedPreferences(SAVED_PREFS, MODE_PRIVATE);
         sort = sharedPreferences.getString(SORT, "Most Popular");
-        Log.d(TAG, "loadPref: " + sort);
+        Log.d(TAG, "Loading preferences: sort set as " + sort);
     }
 }

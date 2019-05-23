@@ -33,8 +33,8 @@ public class Movie implements Parcelable {
     @SerializedName("poster_path")
     private String thumbnailImgUrl;
 
-    @SerializedName("favorite")
-    private String favorite = "false";
+//    @SerializedName("favorite")
+//    private String favorite = "false";
 
     //@SerializedName("baseImgUrl")
     //private String mPosterUrl = "";
@@ -119,9 +119,9 @@ public class Movie implements Parcelable {
         return releaseYear;
     }
 
-    public String getFavorite() {
-        return favorite;
-    }
+//    public String getFavorite() {
+//        return favorite;
+//    }
 
     public void setId(String id) {
 
@@ -158,9 +158,9 @@ public class Movie implements Parcelable {
 //        this.mPosterUrl = mPosterUrl;
 //    }
 
-    public void setFavorite (String mFavorite) {
-        this.favorite = mFavorite;
-    }
+//    public void setFavorite (String mFavorite) {
+//        this.favorite = mFavorite;
+//    }
 
     @Override
     public int describeContents() {

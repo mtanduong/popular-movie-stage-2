@@ -103,17 +103,19 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getIncomingIntent() {
-        Log.d(TAG, "getIncomingIntent: Checking for Intents");
+        Log.d(TAG, "DetailActivity/getIncomingIntent: Checking incoming Intents from MovieAdapter");
 
         Intent intent = getIntent();
         movie = intent.getParcelableExtra("Movie Detail");
         favorite = intent.getBooleanExtra("Favorite", false);
-        Log.d(TAG, "intentFavorite: " + favorite);
+        Log.d(TAG, "DetailActivity/getIncomingIntent: Intent Favorite flag received as " + favorite);
 
         if (!favorite) {
+            Log.d(TAG, "DetailActivity/getIncomingIntent/button: Set button as Favorite");
             unfavoriteButton.setVisibility(View.GONE);
             favoriteButton.setVisibility(View.VISIBLE);
         } else {
+            Log.d(TAG, "DetailActivity/getIncomingIntent/button: Set button as Unfavorite");
             unfavoriteButton.setVisibility(View.VISIBLE);
             favoriteButton.setVisibility(View.GONE);
         }
@@ -132,22 +134,20 @@ public class DetailActivity extends AppCompatActivity {
 
         Call<VideoDBObject> callVideos = retrofitService.getVideoMovies(id, MovieApiUtils.API_KEY);
         Call<ReviewDBObject> callReviews = retrofitService.getReviewMovies(id, MovieApiUtils.API_KEY);
-        Log.d(TAG, "Post video/review call");
 
         callVideoApi(callVideos);
         callReviewApi(callReviews);
 
         setDetail(title, releaseYear, overview, releaseDate, userReview, posterUrl);
-        Log.d(TAG, "getIncomingIntent: Intents completed");
     }
 
     private void setDetail(String title, String releaseYear, String overview, String releaseDate, String userRating, String posterUrl) {
-        Log.d(TAG, "setDetail - title: " + title);
-        Log.d(TAG, "setDetail - releaseYear: " + releaseYear);
-        Log.d(TAG, "setDetail - overview: " + overview);
-        Log.d(TAG, "setDetail - releaseDate: " + releaseDate);
-        Log.d(TAG, "setDetail - userrating: " + userRating);
-        Log.d(TAG, "setDetail - posterurl: " + posterUrl);
+        Log.d(TAG, "DetailActivity/setDetail: title: " + title);
+        Log.d(TAG, "DetailActivity/setDetail: releaseYear: " + releaseYear);
+        Log.d(TAG, "DetailActivity/setDetail: overview: " + overview);
+        Log.d(TAG, "DetailActivity/setDetail: releaseDate: " + releaseDate);
+        Log.d(TAG, "DetailActivity/setDetail: userRating: " + userRating);
+        Log.d(TAG, "DetailActivity/setDetail: posterUrl: " + posterUrl);
 
         TextView movieTitle = findViewById(R.id.movie_title);
         movieTitle.setText(title);
@@ -176,7 +176,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void callVideoApi(Call<VideoDBObject> call) {
-        Log.d(TAG, "called callVideoApi");
+        Log.d(TAG, "DetailActivity/callVideoApi: Called");
         call.enqueue(new Callback<VideoDBObject>() {
             @Override
             public void onResponse(Call<VideoDBObject> call, retrofit2.Response<VideoDBObject> response) {
@@ -202,20 +202,20 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void parseVideos(VideoDBObject videoObject) {
-        Log.d(TAG, "parseVideos started");
+        Log.d(TAG, "DetailActivity/parseVideos: Called");
 
         trailer = videoObject.getResults();
 
-        Log.d(TAG, "videoname: " + trailer.get(0).getmName());
-        Log.d(TAG, "videosite: " + trailer.get(0).getmSite());
-        Log.d(TAG, "videokey: " + trailer.get(0).getmKey());
-        Log.d(TAG, "video link: " + trailer.get(0).getLink());
+        Log.d(TAG, "DetailActivity/parseVideos: videoName: " + trailer.get(0).getmName());
+        Log.d(TAG, "DetailActivity/parseVideos: videoSite: " + trailer.get(0).getmSite());
+        Log.d(TAG, "DetailActivity/parseVideos: videoKey: " + trailer.get(0).getmKey());
+        Log.d(TAG, "DetailActivity/parseVideos: videoLink: " + trailer.get(0).getLink());
 
         startVideoRecyclerView(trailer);
     }
 
     private void callReviewApi(Call<ReviewDBObject> call) {
-        Log.d(TAG, "called callReviewApi");
+        Log.d(TAG, "DetailActivity/callReviewApi: Called");
         call.enqueue(new Callback<ReviewDBObject>() {
             @Override
             public void onResponse(Call<ReviewDBObject> call, retrofit2.Response<ReviewDBObject> response) {
@@ -238,7 +238,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void parseReviews(ReviewDBObject reviewObject) {
-        Log.d(TAG, "parseReviews stated");
+        Log.d(TAG, "DetailActivity/parseReviews: Called");
 
         review = reviewObject.getResults();
 
